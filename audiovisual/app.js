@@ -1,26 +1,25 @@
 import express from 'express'
-import detonv from 'dotenv'
+import dotenv from 'dotenv'
 import cors from 'cors'
+import routerProduct from './routes/routes_Products.js'
+import {errorHandler} from './middleware/error.js'
+import connectionMongoDB from './config/db.js'
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000;
 
+connectionMongoDB();
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
 
-app.get('/api/products', (req, res) => {
-  console.log("entro a la ruta home actualizada")
-  const products = [
-    {name:"camara profesional", id: "1"},
-    {name:"micro profesional", id: "2"},
-  ]
-  
-  res.send({"productos": products});
-})
+app.use('/api/products', routerProduct);
+app.use(errorHandler);
+
+
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Example app listening on port ${PORT}`)
 })
